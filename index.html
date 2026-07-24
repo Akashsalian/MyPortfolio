@@ -670,6 +670,64 @@
   .footer-links a { font-size: 13.5px; color: var(--text-2); transition: color .2s; }
   .footer-links a:hover { color: var(--text-1); }
 
+  /* ================= ULTRALUX PREMIUM SPECIAL EFFECTS ================= */
+  
+  /* 1. Shimmer Hover Glass Reflections */
+  .flagship-card, .proj-card, .skill-group, .about-stat-card, .contact-form-container {
+    position: relative;
+    overflow: hidden;
+  }
+  .flagship-card::after, .proj-card::after, .skill-group::after, .about-stat-card::after, .contact-form-container::after {
+    content: ''; position: absolute; top: -50%; left: -60%; width: 25%; height: 200%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);
+    transform: rotate(25deg);
+    pointer-events: none;
+    transition: none;
+    z-index: 4;
+  }
+  .flagship-card:hover::after, .proj-card:hover::after, .skill-group:hover::after, .about-stat-card:hover::after, .contact-form-container:hover::after {
+    left: 140%;
+    transition: left 1.1s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* 2. Neon Input Scanner Focused Borders */
+  .form-group {
+    position: relative;
+    overflow: visible;
+  }
+  .form-group::after {
+    content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 0%; height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 5;
+    pointer-events: none;
+    box-shadow: 0 0 10px var(--accent-2);
+  }
+  .form-group:focus-within::after {
+    width: 100%;
+  }
+
+  /* 3. Glowing Vector Timeline Connector Laser */
+  .timeline-tree::before {
+    content: ''; position: absolute; left: 6px; top: 8px; bottom: 8px; width: 2px;
+    background: linear-gradient(180deg, var(--accent) 0%, var(--accent-2) 60%, rgba(255,255,255,0.05) 100%);
+    box-shadow: 0 0 8px rgba(139, 92, 246, 0.25);
+  }
+
+  /* 4. SVG Animated Data Packet Paths */
+  .packet-line {
+    stroke-linecap: round;
+    stroke-dasharray: 12, 100;
+    stroke-dashoffset: 112;
+    animation: pushPacket 4.5s linear infinite;
+  }
+  .packet-line.p1 { animation-duration: 3s; }
+  .packet-line.p2 { animation-duration: 4.2s; animation-delay: -1s; }
+  .packet-line.p3 { animation-duration: 5s; animation-delay: -2s; }
+  @keyframes pushPacket {
+    to { stroke-dashoffset: -112; }
+  }
+
   /* Scroll Reveal & Base Animation */
   .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s cubic-bezier(0.16, 1, 0.3, 1), transform .7s cubic-bezier(0.16, 1, 0.3, 1); }
   .reveal.in { opacity: 1; transform: translateY(0); }
@@ -709,6 +767,22 @@
     .contact-form-container { padding: 20px; }
     .modal-body { padding: 20px; }
     .modal-header { padding: 20px; }
+  }
+  @media (max-width: 420px) {
+    .cc-tabs {
+      gap: 1px;
+      padding: 1px;
+    }
+    .cc-tab {
+      padding: 4px 6px;
+      font-size: 9.5px;
+    }
+    .status-grid {
+      grid-template-columns: 1fr;
+    }
+    .clock-widget {
+      grid-column: span 1;
+    }
   }
   @media (max-width: 540px) {
     .contact-panel {
@@ -983,10 +1057,22 @@
       <!-- Stats & Certificates -->
       <div class="reveal">
         <div class="about-stats-grid">
-          <div class="about-stat-card"><b>8.98</b><span>BCA (AI) CGPA</span></div>
-          <div class="about-stat-card"><b>3+</b><span>Shipped Products</span></div>
-          <div class="about-stat-card"><b>95%</b><span>CV Model Accuracy</span></div>
-          <div class="about-stat-card"><b>100+</b><span>Students Led (IT Club)</span></div>
+          <div class="about-stat-card">
+            <b class="stat-num" data-target="8.98" data-decimals="2">0.00</b>
+            <span>BCA (AI) CGPA</span>
+          </div>
+          <div class="about-stat-card">
+            <b class="stat-num" data-target="3" data-suffix="+">0</b>
+            <span>Shipped Products</span>
+          </div>
+          <div class="about-stat-card">
+            <b class="stat-num" data-target="95" data-suffix="%">0</b>
+            <span>CV Model Accuracy</span>
+          </div>
+          <div class="about-stat-card">
+            <b class="stat-num" data-target="100" data-suffix="+">0</b>
+            <span>Students Led (IT Club)</span>
+          </div>
         </div>
         
         <div class="certifications-list">
@@ -2221,14 +2307,8 @@
         <div class="modal-section">
           <h4>Data Streaming Flow</h4>
           <div class="arch-diagram-box">
-            <!-- Inline SVG Diagram representing system path -->
+            <!-- Inline SVG Diagram representing system path with crawling packet streams -->
             <svg viewBox="0 0 500 120" style="width: 100%; height: auto;">
-              <defs>
-                <linearGradient id="flow-grad" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stop-color="var(--accent)" />
-                  <stop offset="100%" stop-color="var(--accent-2)" />
-                </linearGradient>
-              </defs>
               <!-- Nodes -->
               <rect x="10" y="40" width="80" height="40" rx="6" fill="#111827" stroke="var(--accent)" stroke-width="1.5" />
               <text x="50" y="65" fill="#fff" font-size="10" font-family="monospace" text-anchor="middle">User Camera</text>
@@ -2245,12 +2325,19 @@
               <rect x="420" y="40" width="70" height="40" rx="6" fill="#111827" stroke="#fff" stroke-width="1.5" stroke-opacity="0.3" />
               <text x="455" y="65" fill="#fff" font-size="10" font-family="monospace" text-anchor="middle">Local UI</text>
 
-              <!-- Connectors -->
-              <path d="M 90 60 L 150 60" fill="none" stroke="url(#flow-grad)" stroke-width="2" marker-end="url(#arrow)" />
-              <path d="M 240 60 L 270 60 L 270 30 L 300 30" fill="none" stroke="url(#flow-grad)" stroke-width="1.5" />
-              <path d="M 240 60 L 270 60 L 270 90 L 300 90" fill="none" stroke="url(#flow-grad)" stroke-width="1.5" />
-              <path d="M 385 30 L 405 30 L 405 60 L 420 60" fill="none" stroke="#fff" stroke-opacity="0.2" stroke-width="1.5" />
-              <path d="M 385 90 L 405 90 L 405 60 L 420 60" fill="none" stroke="#fff" stroke-opacity="0.2" stroke-width="1.5" />
+              <!-- Base Connector Tracks (Static) -->
+              <path d="M 90 60 L 150 60" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1.5" />
+              <path d="M 240 60 L 270 60 L 270 30 L 300 30" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1.5" />
+              <path d="M 240 60 L 270 60 L 270 90 L 300 90" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1.5" />
+              <path d="M 385 30 L 405 30 L 405 60 L 420 60" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1.5" />
+              <path d="M 385 90 L 405 90 L 405 60 L 420 60" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1.5" />
+
+              <!-- Glowing animated data packet overlays -->
+              <path d="M 90 60 L 150 60" fill="none" stroke="var(--accent)" stroke-width="2.2" class="packet-line p1" />
+              <path d="M 240 60 L 270 60 L 270 30 L 300 30" fill="none" stroke="var(--accent-2)" stroke-width="2.2" class="packet-line p2" />
+              <path d="M 240 60 L 270 60 L 270 90 L 300 90" fill="none" stroke="var(--accent-success)" stroke-width="2.2" class="packet-line p3" />
+              <path d="M 385 30 L 405 30 L 405 60 L 420 60" fill="none" stroke="var(--text-1)" stroke-width="2" class="packet-line p1" />
+              <path d="M 385 90 L 405 90 L 405 60 L 420 60" fill="none" stroke="var(--text-1)" stroke-width="2" class="packet-line p2" />
             </svg>
           </div>
         </div>
@@ -2277,6 +2364,7 @@
           <h4>Data Schema Layout</h4>
           <div class="arch-diagram-box">
             <svg viewBox="0 0 500 120" style="width: 100%; height: auto;">
+              <!-- Nodes -->
               <rect x="15" y="25" width="110" height="70" rx="6" fill="#111827" stroke="var(--accent)" stroke-width="1.5" />
               <text x="70" y="45" fill="var(--accent)" font-size="10" font-family="monospace" text-anchor="middle">User Interface</text>
               <text x="70" y="65" fill="var(--text-3)" font-size="8" font-family="monospace" text-anchor="middle">React client state</text>
@@ -2292,8 +2380,13 @@
               <text x="430" y="65" fill="var(--text-3)" font-size="8" font-family="monospace" text-anchor="middle">Session document</text>
               <text x="430" y="80" fill="var(--text-3)" font-size="8" font-family="monospace" text-anchor="middle">Output indices</text>
 
-              <path d="M 125 60 L 195 60" fill="none" stroke="var(--border-strong)" stroke-width="1.5" />
-              <path d="M 305 60 L 375 60" fill="none" stroke="var(--border-strong)" stroke-width="1.5" />
+              <!-- Base Connector Tracks (Static) -->
+              <path d="M 125 60 L 195 60" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1.5" />
+              <path d="M 305 60 L 375 60" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1.5" />
+
+              <!-- Glowing animated data packet overlays -->
+              <path d="M 125 60 L 195 60" fill="none" stroke="var(--accent-2)" stroke-width="2.2" class="packet-line p1" />
+              <path d="M 305 60 L 375 60" fill="none" stroke="var(--accent-success)" stroke-width="2.2" class="packet-line p2" />
             </svg>
           </div>
         </div>
@@ -2319,6 +2412,7 @@
           <h4>Database Entity Mapping</h4>
           <div class="arch-diagram-box">
             <svg viewBox="0 0 500 120" style="width: 100%; height: auto;">
+              <!-- Nodes -->
               <rect x="20" y="15" width="110" height="90" rx="6" fill="#111827" stroke="var(--accent)" stroke-width="1.5" />
               <text x="75" y="35" fill="var(--accent)" font-size="10" font-family="monospace" text-anchor="middle">Users Table</text>
               <text x="75" y="55" fill="var(--text-3)" font-size="8" font-family="monospace" text-anchor="middle">id [UUID, PK]</text>
@@ -2337,8 +2431,13 @@
               <text x="425" y="70" fill="var(--text-3)" font-size="8" font-family="monospace" text-anchor="middle">sender_id [FK]</text>
               <text x="425" y="85" fill="var(--text-3)" font-size="8" font-family="monospace" text-anchor="middle">swap_status</text>
 
-              <path d="M 130 60 L 195 60" fill="none" stroke="var(--border-strong)" stroke-width="1.5" stroke-dasharray="3,3" />
-              <path d="M 305 60 L 370 60" fill="none" stroke="var(--border-strong)" stroke-width="1.5" stroke-dasharray="3,3" />
+              <!-- Base Connector Tracks (Static) -->
+              <path d="M 130 60 L 195 60" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1.5" stroke-dasharray="3,3" />
+              <path d="M 305 60 L 370 60" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1.5" stroke-dasharray="3,3" />
+
+              <!-- Glowing animated data packet overlays -->
+              <path d="M 130 60 L 195 60" fill="none" stroke="var(--accent)" stroke-width="2.2" class="packet-line p1" />
+              <path d="M 305 60 L 370 60" fill="none" stroke="var(--accent-success)" stroke-width="2.2" class="packet-line p2" />
             </svg>
           </div>
         </div>
@@ -2546,6 +2645,40 @@
     
     window.location.href = `mailto:akashsaliankotegudde@gmail.com?subject=${subject}&body=${body}`;
   });
+
+  /* ================= SCROLL-TO-COUNT-UP STATS TICKER ================= */
+  const statsNodes = document.querySelectorAll('.stat-num');
+  const statsCounterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const target = parseFloat(e.target.getAttribute('data-target'));
+        const suffix = e.target.getAttribute('data-suffix') || '';
+        const decimals = parseInt(e.target.getAttribute('data-decimals') || '0');
+        const duration = 1600; // ms transition length
+        const startTime = performance.now();
+        
+        function tickCounter(currentTime) {
+          const elapsed = currentTime - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          const easeOutProgress = 1 - Math.pow(1 - progress, 3); // Decelerating curve
+          const currentValue = easeOutProgress * target;
+          
+          e.target.textContent = currentValue.toFixed(decimals) + suffix;
+          
+          if (progress < 1) {
+            requestAnimationFrame(tickCounter);
+          } else {
+            e.target.textContent = target.toFixed(decimals) + suffix;
+          }
+        }
+        
+        requestAnimationFrame(tickCounter);
+        statsCounterObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  
+  statsNodes.forEach(node => statsCounterObserver.observe(node));
 </script>
 </body>
 </html>
