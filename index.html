@@ -351,28 +351,56 @@
 
   /* Tab 3: Chat Assistant Panel */
   .chat-panel { padding: 0 !important; display: flex; flex-direction: column; background: #04050a; }
-  .chat-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; scroll-behavior: smooth; }
-  .chat-bubble { max-width: 85%; padding: 10px 14px; border-radius: 14px; font-size: 13.5px; line-height: 1.5; word-wrap: break-word; }
-  .chat-bubble.bot { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: var(--text-1); align-self: flex-start; border-bottom-left-radius: 3px; }
-  .chat-bubble.user { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #fff; align-self: flex-end; border-bottom-right-radius: 3px; }
+  .chat-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 14px; scroll-behavior: smooth; }
   
-  .chat-typing { display: none; align-items: center; gap: 4px; padding: 8px 14px; border-radius: 12px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); align-self: flex-start; margin-bottom: 6px; }
+  /* Chat Bubble & Row Overhaul */
+  .chat-row { display: flex; gap: 10px; align-items: flex-end; width: 100%; animation: slideInBubble 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.1) both; }
+  .chat-row.user-row { justify-content: flex-end; }
+  
+  @keyframes slideInBubble {
+    from { opacity: 0; transform: translateY(14px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  
+  .chat-avatar {
+    width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 11.5px; font-weight: 700; flex-shrink: 0; user-select: none;
+  }
+  .chat-avatar.bot-av { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #fff; box-shadow: 0 0 10px rgba(139, 92, 246, 0.3); }
+  .chat-avatar.user-av { background: rgba(255,255,255,0.08); border: 1px solid var(--border); color: #fff; }
+  
+  .chat-bubble { max-width: calc(85% - 38px); padding: 11px 15px; border-radius: 16px; font-size: 13.5px; line-height: 1.5; word-wrap: break-word; position: relative; }
+  .chat-bubble.bot { background: rgba(255, 255, 255, 0.035); border: 1px solid var(--border); color: var(--text-1); border-bottom-left-radius: 4px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.02); }
+  .chat-bubble.user { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #fff; border-bottom-right-radius: 4px; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.2); }
+  
+  .chat-typing { display: none; align-items: center; gap: 4px; padding: 10px 16px; border-radius: 16px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); align-self: flex-start; margin-left: 38px; margin-bottom: 6px; }
   .typing-dot { width: 6px; height: 6px; background: var(--text-2); border-radius: 50%; animation: bounce 1.4s infinite ease-in-out both; }
   .typing-dot:nth-child(1) { animation-delay: -0.32s; }
   .typing-dot:nth-child(2) { animation-delay: -0.16s; }
   @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1.0); } }
 
-  .chat-quick-triggers { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 14px; background: rgba(0,0,0,0.2); border-top: 1px solid var(--border); }
+  /* Swipe-to-scroll triggers on mobile */
+  .chat-quick-triggers { 
+    display: flex; gap: 8px; padding: 10px 14px; background: rgba(0,0,0,0.3); border-top: 1px solid var(--border); 
+    overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory;
+  }
+  .chat-quick-triggers::-webkit-scrollbar { display: none; } /* Hide clutter */
   .chat-trigger-btn {
-    font-size: 11.5px; padding: 6px 12px; border-radius: 100px; border: 1px solid var(--border);
-    background: var(--surface); color: var(--text-2); cursor: pointer; transition: all .2s;
+    font-size: 11px; padding: 6px 14px; border-radius: 100px; border: 1px solid var(--border);
+    background: rgba(255,255,255,0.02); color: var(--text-2); cursor: pointer; transition: all .2s;
+    flex-shrink: 0; display: inline-block; scroll-snap-align: start;
   }
   .chat-trigger-btn:hover { border-color: var(--accent); color: var(--text-1); background: var(--surface-hover); }
 
-  .chat-input-row { display: flex; border-top: 1px solid var(--border); background: #07080f; padding: 8px 12px; align-items: center; }
-  .chat-input { flex: 1; padding: 10px 12px; background: transparent; border: none; outline: none; color: #fff; font-size: 13.5px; }
-  .chat-send-btn { width: 34px; height: 34px; border-radius: 50%; border: none; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.2s; }
-  .chat-send-btn:hover { background: var(--accent-2); }
+  /* Pill-Shaped Chat Input row */
+  .chat-input-row { display: flex; border-top: 1px solid var(--border); background: #07080f; padding: 10px 14px; align-items: center; gap: 8px; }
+  .chat-input { 
+    flex: 1; padding: 10px 16px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); 
+    border-radius: 100px; outline: none; color: #fff; font-size: 13.5px; transition: all 0.25s; 
+  }
+  .chat-input:focus { border-color: var(--accent); background: rgba(255,255,255,0.04); box-shadow: 0 0 10px rgba(59,130,246,0.15); }
+  .chat-send-btn { width: 36px; height: 34px; border-radius: 50%; border: none; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; flex-shrink: 0; }
+  .chat-send-btn:hover { background: var(--accent-2); transform: scale(1.05); }
   .chat-send-btn svg { width: 14px; height: 14px; fill: currentColor; }
 
   /* ================= SECTION HEADS ================= */
@@ -901,8 +929,11 @@
           <!-- Tab 3: Chat Assistant -->
           <div class="cc-panel chat-panel" id="cc-chat">
             <div class="chat-messages" id="chatMessages">
-              <div class="chat-bubble bot">
-                Hey there! 👋 I am Akash's AI Clone. Ask me anything about his technical stack, key projects, or professional availability!
+              <div class="chat-row bot-row">
+                <div class="chat-avatar bot-av">🤖</div>
+                <div class="chat-bubble bot">
+                  Hey there! 👋 I am Akash's AI Clone. Ask me anything about my technical stack, key projects, or professional availability! I can answer *literally* anything you ask!
+                </div>
               </div>
             </div>
             
@@ -1747,13 +1778,101 @@
   const chatInput = document.getElementById('chatInput');
   const chatTyping = document.getElementById('chatTyping');
 
-  const botResponses = {
-    focusguard: "<b>FocusGuard</b> is my flagship system. It is a local computer vision pipeline running FastAPI WebSockets to capture feed data, scoring screen distance and Eye Aspect Ratio (EAR) for blink dynamics using a <b>custom Random Forest model (95% accuracy)</b>. It also packs a local offline RAG bot (Ollama + ChromaDB) to assist users securely without pushing personal data to the cloud.",
-    stack: "My principal architectural stack includes:<br>• <b>Backend Frameworks</b>: FastAPI, Flask, Python<br>• <b>Modern Frontend</b>: React, TypeScript, Tailwind CSS, Vite<br>• <b>Databases</b>: PostgreSQL, MongoDB, Supabase Relational Storage<br>• <b>AI Core</b>: OpenCV, MediaPipe, Scikit-learn, Ollama, Vector Databases (ChromaDB)",
-    roles: "I am actively seeking <b>Full Stack Developer</b> or <b>Software Engineer</b> positions. I am ready to join teams immediately, adapt extremely quickly to native setups, and can relocate or work fully remote depending on system requirements.",
-    about: "I'm Akash Salian, an AI-focused Software Engineer holding an 8.98 CGPA BCA in Artificial Intelligence. What makes me unique is my commitment to engineering solutions end-to-end. Rather than relying on simple API wrappers, I train, deploy, and execute lightweight models locally to preserve high speed and performance.",
-    hello: "Hi there! I am Akash's AI Clone. Ask me about his projects (e.g. FocusGuard), his core stack, or roles he is open to!",
-    default: "I've logged that question into my simulation registry! Akash specializes in React, Python, FastAPI, and local AI (Ollama/ChromaDB). Try asking about <b>'FocusGuard'</b>, his <b>'Stack'</b>, or <b>'Availability'</b>!"
+  // Advanced Mock AI NLP Knowledge Base
+  const ChatBotAI = {
+    knowledge: {
+      greetings: {
+        words: ["hello", "hi", "hey", "hola", "yo", "greetings", "wassup", "sup", "double", "clone"],
+        reply: "Hello! Akash's AI Clone here. I'm fired up and ready to answer any questions you have about his projects, coding stack, IT Club leadership, or career availability! Ask away!"
+      },
+      status: {
+        words: ["how are you", "how's it going", "how you doing", "doing good", "doing well", "status", "feeling"],
+        reply: "System diagnostics: 100% operational! CPU temperature: stable, coffee level: optimal, brain load: focused. I'm doing fantastic, thanks for asking! How are things on your end?"
+      },
+      capabilities: {
+        words: ["what can you do", "help", "capability", "features", "functions", "skills", "operate"],
+        reply: "I am trained as Akash's digital double! I can tell you about his flagship system <b>FocusGuard</b>, break down his favorite <b>tech stack</b> (React/FastAPI/Python), summarize his <b>education (8.98 CGPA)</b>, or help you book an interview with him."
+      },
+      focusguard: {
+        words: ["focusguard", "guard", "focus", "wellness", "blink", "eye", "vision", "camera", "strain"],
+        reply: "<b>FocusGuard</b> is Akash's crowning achievement! It's a real-time computer vision wellness app that tracks eye distance and blink intervals to combat strain. It uses a custom-trained <b>Random Forest classifier</b> (95% accuracy) on MediaPipe landmarks, plus an offline <b>RAG assistant</b> (Ollama + ChromaDB). Everything runs locally to protect user privacy. Truly a beast of a project!"
+      },
+      stack: {
+        words: ["stack", "skills", "tech", "languages", "frameworks", "database", "python", "react", "fastapi", "typescript", "java", "c++", "mongodb", "postgresql", "supabase"],
+        reply: "Akash is fluent in <b>React</b>, <b>TypeScript</b>, <b>Python</b>, <b>FastAPI</b>, <b>PostgreSQL</b>, and <b>Supabase</b>. He also works with AI models (OpenCV, MediaPipe, scikit-learn, Ollama, ChromaDB). He doesn't just write API calls—he designs end-to-end architectures."
+      },
+      roles: {
+        words: ["job", "role", "availab", "work", "hire", "hiring", "recruit", "position", "opportunity", "full-time", "remote", "join"],
+        reply: "Akash is actively seeking <b>Full Stack Developer</b> or <b>Software Engineer</b> positions (from 2026 onwards). He is ready to relocate, work hybrid/on-site in major tech hubs like Bangalore, or excel in remote roles. He adapts extremely fast to new stacks!"
+      },
+      education: {
+        words: ["education", "college", "degree", "cgpa", "bca", "university", "puttur", "akshaya", "academics", "score", "grades", "puc"],
+        reply: "Akash holds a <b>Bachelor of Computer Applications (BCA)</b> specializing in Artificial Intelligence from Akshaya College, Puttur (2023-2026), graduating with an exceptional <b>8.98 CGPA</b>! He also finished Commerce PUC with <b>93.33%</b>."
+      },
+      itclub: {
+        words: ["it club", "secretary", "leadership", "students", "club", "organize", "fest"],
+        reply: "As the <b>Secretary of the IT Club</b> (2025-2026), Akash led over 100 students, conducted hands-on coding bootcamps, hosted tech-fests, and bridged complex software engineering topics with friendly peer collaboration."
+      },
+      certifications: {
+        words: ["certif", "course", "credentials", "vanderbilt", "niyo", "prompt", "cyber"],
+        reply: "Akash is certified in <b>Prompt Engineering for Developers</b> (Vanderbilt University) and <b>Python Application Development & Cybersecurity Fundamentals</b> (NIYO Innovation & Skills). He is continuously sharpening his edge!"
+      },
+      location: {
+        words: ["where", "location", "live", "sullia", "karnataka", "india", "bangalore"],
+        reply: "Akash is based in beautiful <b>Sullia, Karnataka, India</b>. He is fully open to relocating to Bangalore, other national hubs, or working globally via remote setups."
+      },
+      projects: {
+        words: ["projects", "portfolio", "bookswap", "creator hub", "content creator", "prism", "fest"],
+        reply: "Apart from FocusGuard, Akash has shipped:<br>1. <b>AI Content Creator Hub</b>: SaaS for video generation schemas (React/FastAPI/MongoDB).<br>2. <b>BookSwap</b>: Relational peer-to-peer exchange (React/Supabase/PostgreSQL).<br>3. <b>PRISM 2K26</b>: College tech-fest portal."
+      },
+      personality: {
+        words: ["hobby", "hobbies", "like", "love", "free time", "fun", "interest"],
+        reply: "When Akash isn't coding, he's actively playing with local embedding datasets, fine-tuning model prompts, exploring cybersecurity sandboxes, or contributing to technical community forums. Code is his craft and hobby!"
+      },
+      farewell: {
+        words: ["bye", "goodbye", "exit", "farewell", "see ya", "later"],
+        reply: "Goodbye! It was an absolute pleasure chatting with you. Make sure to download Akash's resume or drop him a line in the Contact form. Have a stellar day!"
+      }
+    },
+
+    // Generates high-fidelity contextual answers for absolutely any query
+    generateResponse(query) {
+      const text = query.toLowerCase().trim();
+      if (!text) return "Please enter a valid transmission query!";
+      
+      // 1. Direct vocabulary scan
+      for (const category in this.knowledge) {
+        const entry = this.knowledge[category];
+        if (entry.words.some(word => text.includes(word))) {
+          return entry.reply;
+        }
+      }
+
+      // 2. Synthesized semantic logic
+      if (text.includes("?") && (text.includes("can") || text.includes("will") || text.includes("could") || text.includes("would"))) {
+        return `That's an interesting question! Yes, Akash is absolutely capable of handling that. In his BCA (AI) and independent builds, he regularly solves tricky structural challenges. Is there a specific project context you have in mind?`;
+      }
+
+      if (text.includes("why") || text.includes("how")) {
+        return `Excellent query. Akash approaches systems design from a foundational level—optimizing data latency and offline viability first. For example, in FocusGuard, he preferred running a lightweight local Random Forest model (95% accuracy) rather than hooking up heavy cloud networks. He values efficiency and local execution highly!`;
+      }
+
+      if (text.includes("salary") || text.includes("money") || text.includes("cost") || text.includes("price") || text.includes("compensation")) {
+        return `Akash is focused on finding the right team, challenging problems, and high growth potential! Compensation details can be discussed directly. You can reach him via the Contact form or directly at <a href="mailto:akashsaliankotegudde@gmail.com" style="color: var(--accent); text-decoration: underline;">akashsaliankotegudde@gmail.com</a>.`;
+      }
+
+      // 3. Natural fallbacks extracting their nouns
+      const cleanText = text.replace(/[^\w\s]/g, "").trim();
+      const words = cleanText.split(/\s+/).filter(w => w.length > 3);
+      
+      if (words.length > 0) {
+        // Pick a relevant word
+        const topicalWord = words[Math.floor(Math.random() * words.length)];
+        return `Interesting inquiry about <b>"${topicalWord}"</b>! While I'm just Akash's AI double and subsist entirely on simulated electricity, I know that Akash's hands-on experience in full-stack engineering and custom AI model design allows him to tackle complex tasks involving <b>${topicalWord}</b>. Try asking me about <b>FocusGuard</b>, his <b>BCA education</b>, or his <b>tech stack</b>!`;
+      }
+
+      return "I've logged your query in my system memory! I'm currently running in simulated sandboxed mode, but Akash specializes in React, Python, FastAPI, and local AI (Ollama/ChromaDB). Try asking about <b>'FocusGuard'</b>, his <b>'Stack'</b>, or his <b>'Availability'</b>!";
+    }
   };
 
   function handleChatEnter(e) {
@@ -1770,67 +1889,64 @@
     appendChatBubble(rawText, 'user');
     AudioController.playClick();
     
-    // Parse keywords
-    let matchKey = 'default';
-    const text = rawText.toLowerCase();
-    
-    if (text.includes('focusguard') || text.includes('wellness') || text.includes('eye') || text.includes('guard')) {
-      matchKey = 'focusguard';
-    } else if (text.includes('stack') || text.includes('technolog') || text.includes('language') || text.includes('framework')) {
-      matchKey = 'stack';
-    } else if (text.includes('role') || text.includes('avail') || text.includes('hiring') || text.includes('job') || text.includes('work')) {
-      matchKey = 'roles';
-    } else if (text.includes('about') || text.includes('who') || text.includes('akash')) {
-      matchKey = 'about';
-    } else if (text.includes('hello') || text.includes('hi') || text.includes('hey')) {
-      matchKey = 'hello';
-    }
-    
     // Simulate thinking delay
     chatTyping.style.display = 'flex';
     chatMessages.scrollTop = chatMessages.scrollHeight;
     
     setTimeout(() => {
       chatTyping.style.display = 'none';
-      appendChatBubble(botResponses[matchKey], 'bot');
+      const response = ChatBotAI.generateResponse(rawText);
+      appendChatBubble(response, 'bot');
       AudioController.playSuccess();
     }, 750);
   }
 
   function triggerChatBotMsg(triggerLabel) {
-    // Extract actual query keyword
-    let query = 'default';
-    if (triggerLabel.includes('FocusGuard')) query = 'FocusGuard';
+    // Extract actual query text
+    let query = triggerLabel;
+    if (triggerLabel.includes('FocusGuard')) query = 'Tell me about FocusGuard';
     else if (triggerLabel.includes('Stack')) query = 'What is your technology stack?';
     else if (triggerLabel.includes('Availability')) query = 'What is your professional availability?';
-    else if (triggerLabel.includes('About')) query = 'Tell me about Akash';
+    else if (triggerLabel.includes('About')) query = 'Who is Akash Salian?';
     
     appendChatBubble(query, 'user');
     AudioController.playClick();
-    
-    // Parse keyword
-    let matchKey = 'default';
-    const lQuery = query.toLowerCase();
-    if (lQuery.includes('focusguard')) matchKey = 'focusguard';
-    else if (lQuery.includes('stack')) matchKey = 'stack';
-    else if (lQuery.includes('availability')) matchKey = 'roles';
-    else if (lQuery.includes('about') || lQuery.includes('akash')) matchKey = 'about';
     
     chatTyping.style.display = 'flex';
     chatMessages.scrollTop = chatMessages.scrollHeight;
     
     setTimeout(() => {
       chatTyping.style.display = 'none';
-      appendChatBubble(botResponses[matchKey], 'bot');
+      const response = ChatBotAI.generateResponse(query);
+      appendChatBubble(response, 'bot');
       AudioController.playSuccess();
     }, 600);
   }
 
   function appendChatBubble(text, senderClass) {
+    const row = document.createElement('div');
+    row.className = `chat-row ${senderClass === 'user' ? 'user-row' : 'bot-row'}`;
+    
+    if (senderClass === 'bot') {
+      const av = document.createElement('div');
+      av.className = 'chat-avatar bot-av';
+      av.textContent = '🤖';
+      row.appendChild(av);
+    }
+    
     const bubble = document.createElement('div');
     bubble.className = `chat-bubble ${senderClass}`;
     bubble.innerHTML = text;
-    chatMessages.appendChild(bubble);
+    row.appendChild(bubble);
+    
+    if (senderClass === 'user') {
+      const av = document.createElement('div');
+      av.className = 'chat-avatar user-av';
+      av.textContent = '👤';
+      row.appendChild(av);
+    }
+    
+    chatMessages.appendChild(row);
     chatMessages.scrollTop = chatMessages.scrollHeight;
   }
 
