@@ -305,6 +305,7 @@
   .cc-body { flex: 1; position: relative; overflow-y: auto; background: #040509; }
   .cc-panel { display: none; height: 100%; width: 100%; position: absolute; inset: 0; padding: 20px; }
   .cc-panel.active { display: block; }
+  .cc-panel.active.terminal-panel, .cc-panel.active.chat-panel { display: flex; }
 
   /* Tab 1: Dashboard Status Panel */
   .status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; height: 100%; align-content: start; }
@@ -351,6 +352,20 @@
 
   /* Tab 3: Chat Assistant Panel */
   .chat-panel { padding: 0 !important; display: flex; flex-direction: column; background: #04050a; }
+  
+  .chat-header-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    background: #020205; padding: 10px 16px; border-bottom: 1px solid var(--border);
+  }
+  .chat-reset-btn {
+    background: transparent; border: 1px solid var(--border); color: var(--text-3);
+    font-size: 10px; font-family: var(--font-mono); font-weight: 600; padding: 3px 10px; border-radius: 4px;
+    cursor: pointer; transition: all 0.2s; text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .chat-reset-btn:hover {
+    color: var(--text-1); border-color: var(--border-strong); background: rgba(255,255,255,0.03);
+  }
+  
   .chat-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 14px; scroll-behavior: smooth; }
   
   /* Chat Bubble & Row Overhaul */
@@ -767,6 +782,38 @@
     .contact-form-container { padding: 20px; }
     .modal-body { padding: 20px; }
     .modal-header { padding: 20px; }
+    
+    /* Highly polished chat interface overrides on mobile devices */
+    .chat-messages {
+      padding: 10px;
+      gap: 10px;
+    }
+    .chat-avatar {
+      width: 24px;
+      height: 24px;
+      font-size: 10px;
+    }
+    .chat-bubble {
+      max-width: calc(88% - 30px);
+      padding: 8px 12px;
+      font-size: 12.5px;
+    }
+    .chat-typing {
+      margin-left: 34px;
+      padding: 8px 12px;
+    }
+    .chat-input-row {
+      padding: 8px 10px;
+      gap: 6px;
+    }
+    .chat-input {
+      padding: 8px 12px;
+      font-size: 12.5px;
+    }
+    .chat-send-btn {
+      width: 32px;
+      height: 32px;
+    }
   }
   @media (max-width: 420px) {
     .cc-tabs {
@@ -1002,6 +1049,14 @@
           
           <!-- Tab 3: Chat Assistant -->
           <div class="cc-panel chat-panel" id="cc-chat">
+            <div class="chat-header-bar">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="pulse-indicator" style="width: 7px; height: 7px; background-color: var(--accent-success); animation: pulse-glow 1.5s infinite; border-radius: 50%;"></span>
+                <span style="font-family: var(--font-mono); font-size: 10.5px; font-weight: 600; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.05em;">Akash-AI (Active)</span>
+              </div>
+              <button class="chat-reset-btn" onclick="resetChatHistory()">Reset</button>
+            </div>
+            
             <div class="chat-messages" id="chatMessages">
               <div class="chat-row bot-row">
                 <div class="chat-avatar bot-av">🤖</div>
@@ -1025,7 +1080,7 @@
             </div>
             
             <div class="chat-input-row">
-              <input type="text" class="chat-input" id="chatInput" placeholder="Ask anything about Akash..." onkeypress="handleChatEnter(event)">
+              <input type="text" class="chat-input" id="chatInput" placeholder="Type anything, e.g. 'hye'..." onkeypress="handleChatEnter(event)">
               <button class="chat-send-btn" onclick="sendChatMsg()">
                 <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
               </button>
@@ -1624,11 +1679,18 @@
   });
 
   /* ================= LOADER HANDLING ================= */
-  window.addEventListener('load', () => {
+  function hideLoader() {
     setTimeout(() => {
-      document.getElementById('loader').classList.add('hide');
+      const loader = document.getElementById('loader');
+      if (loader) loader.classList.add('hide');
     }, 400);
-  });
+  }
+
+  if (document.readyState === 'complete') {
+    hideLoader();
+  } else {
+    window.addEventListener('load', hideLoader);
+  }
 
   /* ================= NAV SCROLL HANDLING ================= */
   const nav = document.getElementById('nav');
@@ -1864,59 +1926,100 @@
   const chatInput = document.getElementById('chatInput');
   const chatTyping = document.getElementById('chatTyping');
 
+  // Spelling-tolerant Levenshtein edit distance for fuzzy typo matching
+  function getLevenshteinDistance(a, b) {
+    const tmp = [];
+    for (let i = 0; i <= a.length; i++) tmp[i] = [i];
+    for (let j = 0; j <= b.length; j++) tmp[0][j] = j;
+    
+    for (let i = 1; i <= a.length; i++) {
+      for (let j = 1; j <= b.length; j++) {
+        tmp[i][j] = Math.min(
+          tmp[i - 1][j] + 1, // deletion
+          tmp[i][j - 1] + 1, // insertion
+          tmp[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1) // substitution
+        );
+      }
+    }
+    return tmp[a.length][b.length];
+  }
+
+  // Tokenizes input and checks if any word matches or is within typo limits of target words
+  function matchesFuzzy(userInput, targetWordList, editDistanceLimit = 1) {
+    const words = userInput.toLowerCase().replace(/[^\w\s]/g, "").split(/\s+/).filter(w => w.length > 0);
+    if (words.length === 0) return false;
+    
+    // Direct token matching
+    for (const target of targetWordList) {
+      if (words.includes(target)) return true;
+    }
+    
+    // Typos / Edit distance matching (e.g. "hye" -> "hey", distance 1)
+    for (const word of words) {
+      for (const target of targetWordList) {
+        if (Math.abs(word.length - target.length) <= editDistanceLimit) {
+          if (getLevenshteinDistance(word, target) <= editDistanceLimit) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
   // Advanced Mock AI NLP Knowledge Base
   const ChatBotAI = {
     knowledge: {
       greetings: {
-        words: ["hello", "hi", "hey", "hola", "yo", "greetings", "wassup", "sup", "double", "clone"],
+        words: ["hello", "hi", "hey", "hola", "yo", "greetings", "wassup", "sup", "double", "clone", "hye", "hii", "helo", "heyy"],
         reply: "Hello! Akash's AI Clone here. I'm fired up and ready to answer any questions you have about his projects, coding stack, IT Club leadership, or career availability! Ask away!"
       },
       status: {
-        words: ["how are you", "how's it going", "how you doing", "doing good", "doing well", "status", "feeling"],
+        words: ["how are you", "how's it going", "how you doing", "doing good", "doing well", "status", "feeling", "feling"],
         reply: "System diagnostics: 100% operational! CPU temperature: stable, coffee level: optimal, brain load: focused. I'm doing fantastic, thanks for asking! How are things on your end?"
       },
       capabilities: {
-        words: ["what can you do", "help", "capability", "features", "functions", "skills", "operate"],
+        words: ["what can you do", "help", "capability", "features", "functions", "skills", "operate", "abilities"],
         reply: "I am trained as Akash's digital double! I can tell you about his flagship system <b>FocusGuard</b>, break down his favorite <b>tech stack</b> (React/FastAPI/Python), summarize his <b>education (8.98 CGPA)</b>, or help you book an interview with him."
       },
       focusguard: {
-        words: ["focusguard", "guard", "focus", "wellness", "blink", "eye", "vision", "camera", "strain"],
+        words: ["focusguard", "guard", "focus", "wellness", "blink", "eye", "vision", "camera", "strain", "fucus", "gurd", "focuse"],
         reply: "<b>FocusGuard</b> is Akash's crowning achievement! It's a real-time computer vision wellness app that tracks eye distance and blink intervals to combat strain. It uses a custom-trained <b>Random Forest classifier</b> (95% accuracy) on MediaPipe landmarks, plus an offline <b>RAG assistant</b> (Ollama + ChromaDB). Everything runs locally to protect user privacy. Truly a beast of a project!"
       },
       stack: {
-        words: ["stack", "skills", "tech", "languages", "frameworks", "database", "python", "react", "fastapi", "typescript", "java", "c++", "mongodb", "postgresql", "supabase"],
+        words: ["stack", "skills", "tech", "languages", "frameworks", "database", "python", "react", "fastapi", "typescript", "java", "c++", "mongodb", "postgresql", "supabase", "stak", "skils"],
         reply: "Akash is fluent in <b>React</b>, <b>TypeScript</b>, <b>Python</b>, <b>FastAPI</b>, <b>PostgreSQL</b>, and <b>Supabase</b>. He also works with AI models (OpenCV, MediaPipe, scikit-learn, Ollama, ChromaDB). He doesn't just write API calls—he designs end-to-end architectures."
       },
       roles: {
-        words: ["job", "role", "availab", "work", "hire", "hiring", "recruit", "position", "opportunity", "full-time", "remote", "join"],
+        words: ["job", "role", "availab", "work", "hire", "hiring", "recruit", "position", "opportunity", "full-time", "remote", "join", "avail"],
         reply: "Akash is actively seeking <b>Full Stack Developer</b> or <b>Software Engineer</b> positions (from 2026 onwards). He is ready to relocate, work hybrid/on-site in major tech hubs like Bangalore, or excel in remote roles. He adapts extremely fast to new stacks!"
       },
       education: {
-        words: ["education", "college", "degree", "cgpa", "bca", "university", "puttur", "akshaya", "academics", "score", "grades", "puc"],
+        words: ["education", "college", "degree", "cgpa", "bca", "university", "puttur", "akshaya", "academics", "score", "grades", "puc", "school"],
         reply: "Akash holds a <b>Bachelor of Computer Applications (BCA)</b> specializing in Artificial Intelligence from Akshaya College, Puttur (2023-2026), graduating with an exceptional <b>8.98 CGPA</b>! He also finished Commerce PUC with <b>93.33%</b>."
       },
       itclub: {
-        words: ["it club", "secretary", "leadership", "students", "club", "organize", "fest"],
+        words: ["it club", "secretary", "leadership", "students", "club", "organize", "fest", "prism"],
         reply: "As the <b>Secretary of the IT Club</b> (2025-2026), Akash led over 100 students, conducted hands-on coding bootcamps, hosted tech-fests, and bridged complex software engineering topics with friendly peer collaboration."
       },
       certifications: {
-        words: ["certif", "course", "credentials", "vanderbilt", "niyo", "prompt", "cyber"],
+        words: ["certif", "course", "credentials", "vanderbilt", "niyo", "prompt", "cyber", "certificates"],
         reply: "Akash is certified in <b>Prompt Engineering for Developers</b> (Vanderbilt University) and <b>Python Application Development & Cybersecurity Fundamentals</b> (NIYO Innovation & Skills). He is continuously sharpening his edge!"
       },
       location: {
-        words: ["where", "location", "live", "sullia", "karnataka", "india", "bangalore"],
+        words: ["where", "location", "live", "sullia", "karnataka", "india", "bangalore", "place", "city"],
         reply: "Akash is based in beautiful <b>Sullia, Karnataka, India</b>. He is fully open to relocating to Bangalore, other national hubs, or working globally via remote setups."
       },
       projects: {
-        words: ["projects", "portfolio", "bookswap", "creator hub", "content creator", "prism", "fest"],
+        words: ["projects", "portfolio", "bookswap", "creator hub", "content creator", "prism", "fest", "project"],
         reply: "Apart from FocusGuard, Akash has shipped:<br>1. <b>AI Content Creator Hub</b>: SaaS for video generation schemas (React/FastAPI/MongoDB).<br>2. <b>BookSwap</b>: Relational peer-to-peer exchange (React/Supabase/PostgreSQL).<br>3. <b>PRISM 2K26</b>: College tech-fest portal."
       },
       personality: {
-        words: ["hobby", "hobbies", "like", "love", "free time", "fun", "interest"],
+        words: ["hobby", "hobbies", "like", "love", "free time", "fun", "interest", "likes"],
         reply: "When Akash isn't coding, he's actively playing with local embedding datasets, fine-tuning model prompts, exploring cybersecurity sandboxes, or contributing to technical community forums. Code is his craft and hobby!"
       },
       farewell: {
-        words: ["bye", "goodbye", "exit", "farewell", "see ya", "later"],
+        words: ["bye", "goodbye", "exit", "farewell", "see ya", "later", "thanks", "thank"],
         reply: "Goodbye! It was an absolute pleasure chatting with you. Make sure to download Akash's resume or drop him a line in the Contact form. Have a stellar day!"
       }
     },
@@ -1926,10 +2029,10 @@
       const text = query.toLowerCase().trim();
       if (!text) return "Please enter a valid transmission query!";
       
-      // 1. Direct vocabulary scan
+      // 1. Fuzzy and Direct vocabulary scan
       for (const category in this.knowledge) {
         const entry = this.knowledge[category];
-        if (entry.words.some(word => text.includes(word))) {
+        if (matchesFuzzy(text, entry.words, 1)) {
           return entry.reply;
         }
       }
@@ -2007,6 +2110,18 @@
       appendChatBubble(response, 'bot');
       AudioController.playSuccess();
     }, 600);
+  }
+
+  function resetChatHistory() {
+    AudioController.playSuccess();
+    chatMessages.innerHTML = `
+      <div class="chat-row bot-row">
+        <div class="chat-avatar bot-av">🤖</div>
+        <div class="chat-bubble bot">
+          Hey there! 👋 Akash's AI Clone re-initialized. My system buffers are fully purged. Ask me any question, and I'll answer it!
+        </div>
+      </div>
+    `;
   }
 
   function appendChatBubble(text, senderClass) {
