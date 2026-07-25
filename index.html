@@ -1678,11 +1678,18 @@
   });
 
   /* ================= LOADER HANDLING ================= */
-  window.addEventListener('load', () => {
+  function hideLoader() {
     setTimeout(() => {
-      document.getElementById('loader').classList.add('hide');
+      const loader = document.getElementById('loader');
+      if (loader) loader.classList.add('hide');
     }, 400);
-  });
+  }
+
+  if (document.readyState === 'complete') {
+    hideLoader();
+  } else {
+    window.addEventListener('load', hideLoader);
+  }
 
   /* ================= NAV SCROLL HANDLING ================= */
   const nav = document.getElementById('nav');
