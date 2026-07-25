@@ -305,6 +305,7 @@
   .cc-body { flex: 1; position: relative; overflow-y: auto; background: #040509; }
   .cc-panel { display: none; height: 100%; width: 100%; position: absolute; inset: 0; padding: 20px; }
   .cc-panel.active { display: block; }
+  .cc-panel.active.terminal-panel, .cc-panel.active.chat-panel { display: flex; }
 
   /* Tab 1: Dashboard Status Panel */
   .status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; height: 100%; align-content: start; }
