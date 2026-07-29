@@ -305,7 +305,7 @@
   .cc-body { flex: 1; position: relative; overflow-y: auto; background: #040509; }
   .cc-panel { display: none; height: 100%; width: 100%; position: absolute; inset: 0; padding: 20px; }
   .cc-panel.active { display: block; }
-  .cc-panel.active.terminal-panel, .cc-panel.active.chat-panel { display: flex; }
+  .cc-panel.active.terminal-panel { display: flex; }
 
   /* Tab 1: Dashboard Status Panel */
   .status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; height: 100%; align-content: start; }
@@ -350,73 +350,7 @@
   .matrix-exit { position: absolute; top: 12px; right: 12px; padding: 6px 12px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; color: #fff; font-size: 11px; cursor: pointer; font-family: var(--font-mono); }
   .matrix-exit:hover { background: rgba(255,255,255,0.2); }
 
-  /* Tab 3: Chat Assistant Panel */
-  .chat-panel { padding: 0 !important; display: flex; flex-direction: column; background: #04050a; }
-  
-  .chat-header-bar {
-    display: flex; align-items: center; justify-content: space-between;
-    background: #020205; padding: 10px 16px; border-bottom: 1px solid var(--border);
-  }
-  .chat-reset-btn {
-    background: transparent; border: 1px solid var(--border); color: var(--text-3);
-    font-size: 10px; font-family: var(--font-mono); font-weight: 600; padding: 3px 10px; border-radius: 4px;
-    cursor: pointer; transition: all 0.2s; text-transform: uppercase; letter-spacing: 0.05em;
-  }
-  .chat-reset-btn:hover {
-    color: var(--text-1); border-color: var(--border-strong); background: rgba(255,255,255,0.03);
-  }
-  
-  .chat-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 14px; scroll-behavior: smooth; }
-  
-  /* Chat Bubble & Row Overhaul */
-  .chat-row { display: flex; gap: 10px; align-items: flex-end; width: 100%; animation: slideInBubble 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.1) both; }
-  .chat-row.user-row { justify-content: flex-end; }
-  
-  @keyframes slideInBubble {
-    from { opacity: 0; transform: translateY(14px) scale(0.95); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
-  }
-  
-  .chat-avatar {
-    width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    font-size: 11.5px; font-weight: 700; flex-shrink: 0; user-select: none;
-  }
-  .chat-avatar.bot-av { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #fff; box-shadow: 0 0 10px rgba(139, 92, 246, 0.3); }
-  .chat-avatar.user-av { background: rgba(255,255,255,0.08); border: 1px solid var(--border); color: #fff; }
-  
-  .chat-bubble { max-width: calc(85% - 38px); padding: 11px 15px; border-radius: 16px; font-size: 13.5px; line-height: 1.5; word-wrap: break-word; position: relative; }
-  .chat-bubble.bot { background: rgba(255, 255, 255, 0.035); border: 1px solid var(--border); color: var(--text-1); border-bottom-left-radius: 4px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.02); }
-  .chat-bubble.user { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #fff; border-bottom-right-radius: 4px; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.2); }
-  
-  .chat-typing { display: none; align-items: center; gap: 4px; padding: 10px 16px; border-radius: 16px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); align-self: flex-start; margin-left: 38px; margin-bottom: 6px; }
-  .typing-dot { width: 6px; height: 6px; background: var(--text-2); border-radius: 50%; animation: bounce 1.4s infinite ease-in-out both; }
-  .typing-dot:nth-child(1) { animation-delay: -0.32s; }
-  .typing-dot:nth-child(2) { animation-delay: -0.16s; }
-  @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1.0); } }
 
-  /* Swipe-to-scroll triggers on mobile */
-  .chat-quick-triggers { 
-    display: flex; gap: 8px; padding: 10px 14px; background: rgba(0,0,0,0.3); border-top: 1px solid var(--border); 
-    overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory;
-  }
-  .chat-quick-triggers::-webkit-scrollbar { display: none; } /* Hide clutter */
-  .chat-trigger-btn {
-    font-size: 11px; padding: 6px 14px; border-radius: 100px; border: 1px solid var(--border);
-    background: rgba(255,255,255,0.02); color: var(--text-2); cursor: pointer; transition: all .2s;
-    flex-shrink: 0; display: inline-block; scroll-snap-align: start;
-  }
-  .chat-trigger-btn:hover { border-color: var(--accent); color: var(--text-1); background: var(--surface-hover); }
-
-  /* Pill-Shaped Chat Input row */
-  .chat-input-row { display: flex; border-top: 1px solid var(--border); background: #07080f; padding: 10px 14px; align-items: center; gap: 8px; }
-  .chat-input { 
-    flex: 1; padding: 10px 16px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); 
-    border-radius: 100px; outline: none; color: #fff; font-size: 13.5px; transition: all 0.25s; 
-  }
-  .chat-input:focus { border-color: var(--accent); background: rgba(255,255,255,0.04); box-shadow: 0 0 10px rgba(59,130,246,0.15); }
-  .chat-send-btn { width: 36px; height: 34px; border-radius: 50%; border: none; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; flex-shrink: 0; }
-  .chat-send-btn:hover { background: var(--accent-2); transform: scale(1.05); }
-  .chat-send-btn svg { width: 14px; height: 14px; fill: currentColor; }
 
   /* ================= SECTION HEADS ================= */
   .section-pad { padding: 110px 0; }
@@ -783,37 +717,6 @@
     .modal-body { padding: 20px; }
     .modal-header { padding: 20px; }
     
-    /* Highly polished chat interface overrides on mobile devices */
-    .chat-messages {
-      padding: 10px;
-      gap: 10px;
-    }
-    .chat-avatar {
-      width: 24px;
-      height: 24px;
-      font-size: 10px;
-    }
-    .chat-bubble {
-      max-width: calc(88% - 30px);
-      padding: 8px 12px;
-      font-size: 12.5px;
-    }
-    .chat-typing {
-      margin-left: 34px;
-      padding: 8px 12px;
-    }
-    .chat-input-row {
-      padding: 8px 10px;
-      gap: 6px;
-    }
-    .chat-input {
-      padding: 8px 12px;
-      font-size: 12.5px;
-    }
-    .chat-send-btn {
-      width: 32px;
-      height: 32px;
-    }
   }
   @media (max-width: 420px) {
     .cc-tabs {
@@ -1282,7 +1185,6 @@
           <div class="cc-tabs">
             <button class="cc-tab active" data-tab="cc-status" onclick="switchCCTab('cc-status')">Status</button>
             <button class="cc-tab" data-tab="cc-terminal" onclick="switchCCTab('cc-terminal')">Terminal</button>
-            <button class="cc-tab" data-tab="cc-chat" onclick="switchCCTab('cc-chat')">AI Clone</button>
           </div>
         </div>
         
@@ -1367,46 +1269,7 @@
             </div>
           </div>
           
-          <!-- Tab 3: Chat Assistant -->
-          <div class="cc-panel chat-panel" id="cc-chat">
-            <div class="chat-header-bar">
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <span class="pulse-indicator" style="width: 7px; height: 7px; background-color: var(--accent-success); animation: pulse-glow 1.5s infinite; border-radius: 50%;"></span>
-                <span style="font-family: var(--font-mono); font-size: 10.5px; font-weight: 600; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.05em;">Akash-AI (Active)</span>
-              </div>
-              <button class="chat-reset-btn" onclick="resetChatHistory()">Reset</button>
-            </div>
-            
-            <div class="chat-messages" id="chatMessages">
-              <div class="chat-row bot-row">
-                <div class="chat-avatar bot-av">🤖</div>
-                <div class="chat-bubble bot">
-                  Hey there! 👋 I am Akash's AI Clone. Ask me anything about my technical stack, key projects, or professional availability! I can answer *literally* anything you ask!
-                </div>
-              </div>
-            </div>
-            
-            <div class="chat-typing" id="chatTyping">
-              <span class="typing-dot"></span>
-              <span class="typing-dot"></span>
-              <span class="typing-dot"></span>
-            </div>
-            
-            <div class="chat-quick-triggers">
-              <button class="chat-trigger-btn" onclick="triggerChatBotMsg('🔍 FocusGuard?')">🔍 FocusGuard?</button>
-              <button class="chat-trigger-btn" onclick="triggerChatBotMsg('🛠 Technical Stack?')">🛠 Stack?</button>
-              <button class="chat-trigger-btn" onclick="triggerChatBotMsg('🚀 Roles &amp; Availability?')">🚀 Availability?</button>
-              <button class="chat-trigger-btn" onclick="triggerChatBotMsg('👨‍💻 Who is Akash?')">👨‍💻 About?</button>
-            </div>
-            
-            <div class="chat-input-row">
-              <input type="text" class="chat-input" id="chatInput" placeholder="Type anything, e.g. 'hye'..." onkeypress="handleChatEnter(event)">
-              <button class="chat-send-btn" onclick="sendChatMsg()">
-                <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
-              </button>
-            </div>
-          </div>
-          
+
         </div>
       </div>
       
@@ -1677,14 +1540,17 @@
           </div>
           <h3 style="margin-top: 12px;">AI Content Creator Hub</h3>
           <p class="desc">
-            An advanced platform for creators to generate optimized titles, video scripts, search descriptions, and trending hashtags utilizing fine-tuned LLM responses. Equipped with structural database caching to support rapid generation logs.
+            An AI-powered platform that helps creators generate content ideas in seconds. Users sign up, log in securely, and generate titles, video scripts, and hashtags — all powered by an integrated LLM (Groq API). Generated content is saved to a personal history, so users can revisit and reuse past outputs instead of starting from scratch each time.
           </p>
           <div class="hero-pills">
-            <span class="pill">React</span>
+            <span class="pill">Python</span>
             <span class="pill">FastAPI</span>
             <span class="pill">MongoDB</span>
-            <span class="pill">REST API</span>
+            <span class="pill">Groq API</span>
             <span class="pill">JWT Auth</span>
+            <span class="pill">Docker</span>
+            <span class="pill">AWS EC2</span>
+            <span class="pill">GitHub Actions</span>
           </div>
         </div>
         
@@ -2079,7 +1945,7 @@
 
   // Hook hover sounds to main interactive items
   window.addEventListener('DOMContentLoaded', () => {
-    const triggers = ['a', 'button', '.skill-tag', '.cc-tab', '.chat-trigger-btn', '.contact-direct-item'];
+    const triggers = ['a', 'button', '.skill-tag', '.cc-tab', '.contact-direct-item'];
     triggers.forEach(sel => {
       document.body.addEventListener('mouseenter', (e) => {
         if (e.target.matches(sel)) {
@@ -2221,7 +2087,7 @@
     help: 'Available operations:\n  - <b>about</b>: Brief of Akash\n  - <b>skills</b>: Tech list\n  - <b>projects</b>: Shipped production items\n  - <b>contact</b>: Channels of outreach\n  - <b>coffee</b>: Refills developer coffee bar\n  - <b>matrix</b>: Initialize falling terminal matrix easter egg\n  - <b>clear</b>: Purge terminal view buffer',
     about: '<b>Akash Salian</b> — Full Stack Developer &amp; Software Engineer.\nFocuses on combining elegant frontend interfaces (React/TS) with fast, local AI processing backends (FastAPI/Python/Ollama).\nBCA in AI (CGPA 8.98) from Akshaya College, Puttur.\nSecretary of IT Club (2025-2026).',
     skills: '<b>Technical Profile Stack:</b>\n  Languages  : Python, TypeScript, JavaScript, Java, C++\n  Frontend   : React, HTML5, CSS3, Tailwind CSS, Vite\n  Backend    : FastAPI, Flask, REST APIs, WebSockets\n  AI / ML    : OpenCV, MediaPipe, Scikit-learn, Local RAG, ChromaDB, Ollama\n  Databases  : PostgreSQL, MongoDB, Supabase, MySQL\n  Workflow   : Git, GitHub, VS Code, Postman, Vercel, Netlify',
-    projects: '<b>Production Deployments:</b>\n  1. <b>FocusGuard</b> (Flagship) - Computer vision eye wellness. Runs local Random Forest and local Ollama model.\n  2. <b>AI Content Creator Hub</b> - LLM-powered content builder with cache indexes.\n  3. <b>BookSwap</b> - Relational community book marketplace built with Supabase and relational tables.\n  4. <b>PRISM 2K26</b> - Event page for major college tech fest.',
+    projects: '<b>Production Deployments:</b>\n  1. <b>FocusGuard</b> (Flagship) - Computer vision eye wellness. Runs local Random Forest and local Ollama model.\n  2. <b>AI Content Creator Hub</b> - AI-powered content platform. Groq API + FastAPI + MongoDB + Docker on AWS EC2 + CI/CD.\n  3. <b>BookSwap</b> - Relational community book marketplace built with Supabase and relational tables.\n  4. <b>PRISM 2K26</b> - Event page for major college tech fest.',
     contact: '<b>Outreach channels:</b>\n  - Email    : akashsaliankotegudde@gmail.com\n  - Phone    : +91 93534 03426\n  - LinkedIn : linkedin.com/in/akash-salian-b14b7a307\n  - GitHub   : github.com/Akashsalian\n  - Location : Sullia, Karnataka, India',
     coffee: 'Refilling coffee level... ☕\n[SUCCESS] Coffee level restored to 100%!',
     clear: ''
@@ -2332,235 +2198,6 @@
     appendTerminalLine('Terminated matrix routine. Returned to active shell terminal.', 'success');
   }
 
-  /* ================= CONVERSATIONAL AI AGENT CHAT CLONE ================= */
-  const chatMessages = document.getElementById('chatMessages');
-  const chatInput = document.getElementById('chatInput');
-  const chatTyping = document.getElementById('chatTyping');
-
-  // Spelling-tolerant Levenshtein edit distance for fuzzy typo matching
-  function getLevenshteinDistance(a, b) {
-    const tmp = [];
-    for (let i = 0; i <= a.length; i++) tmp[i] = [i];
-    for (let j = 0; j <= b.length; j++) tmp[0][j] = j;
-    
-    for (let i = 1; i <= a.length; i++) {
-      for (let j = 1; j <= b.length; j++) {
-        tmp[i][j] = Math.min(
-          tmp[i - 1][j] + 1, // deletion
-          tmp[i][j - 1] + 1, // insertion
-          tmp[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1) // substitution
-        );
-      }
-    }
-    return tmp[a.length][b.length];
-  }
-
-  // Tokenizes input and checks if any word matches or is within typo limits of target words
-  function matchesFuzzy(userInput, targetWordList, editDistanceLimit = 1) {
-    const words = userInput.toLowerCase().replace(/[^\w\s]/g, "").split(/\s+/).filter(w => w.length > 0);
-    if (words.length === 0) return false;
-    
-    // Direct token matching
-    for (const target of targetWordList) {
-      if (words.includes(target)) return true;
-    }
-    
-    // Typos / Edit distance matching (e.g. "hye" -> "hey", distance 1)
-    for (const word of words) {
-      for (const target of targetWordList) {
-        if (Math.abs(word.length - target.length) <= editDistanceLimit) {
-          if (getLevenshteinDistance(word, target) <= editDistanceLimit) {
-            return true;
-          }
-        }
-      }
-    }
-    return false;
-  }
-
-  // Advanced Mock AI NLP Knowledge Base
-  const ChatBotAI = {
-    knowledge: {
-      greetings: {
-        words: ["hello", "hi", "hey", "hola", "yo", "greetings", "wassup", "sup", "double", "clone", "hye", "hii", "helo", "heyy"],
-        reply: "Hello! Akash's AI Clone here. I'm fired up and ready to answer any questions you have about his projects, coding stack, IT Club leadership, or career availability! Ask away!"
-      },
-      status: {
-        words: ["how are you", "how's it going", "how you doing", "doing good", "doing well", "status", "feeling", "feling"],
-        reply: "System diagnostics: 100% operational! CPU temperature: stable, coffee level: optimal, brain load: focused. I'm doing fantastic, thanks for asking! How are things on your end?"
-      },
-      capabilities: {
-        words: ["what can you do", "help", "capability", "features", "functions", "skills", "operate", "abilities"],
-        reply: "I am trained as Akash's digital double! I can tell you about his flagship system <b>FocusGuard</b>, break down his favorite <b>tech stack</b> (React/FastAPI/Python), summarize his <b>education (8.98 CGPA)</b>, or help you book an interview with him."
-      },
-      focusguard: {
-        words: ["focusguard", "guard", "focus", "wellness", "blink", "eye", "vision", "camera", "strain", "fucus", "gurd", "focuse"],
-        reply: "<b>FocusGuard</b> is Akash's crowning achievement! It's a real-time computer vision wellness app that tracks eye distance and blink intervals to combat strain. It uses a custom-trained <b>Random Forest classifier</b> (95% accuracy) on MediaPipe landmarks, plus an offline <b>RAG assistant</b> (Ollama + ChromaDB). Everything runs locally to protect user privacy. Truly a beast of a project!"
-      },
-      stack: {
-        words: ["stack", "skills", "tech", "languages", "frameworks", "database", "python", "react", "fastapi", "typescript", "java", "c++", "mongodb", "postgresql", "supabase", "stak", "skils"],
-        reply: "Akash is fluent in <b>React</b>, <b>TypeScript</b>, <b>Python</b>, <b>FastAPI</b>, <b>PostgreSQL</b>, and <b>Supabase</b>. He also works with AI models (OpenCV, MediaPipe, scikit-learn, Ollama, ChromaDB). He doesn't just write API calls—he designs end-to-end architectures."
-      },
-      roles: {
-        words: ["job", "role", "availab", "work", "hire", "hiring", "recruit", "position", "opportunity", "full-time", "remote", "join", "avail"],
-        reply: "Akash is actively seeking <b>Full Stack Developer</b> or <b>Software Engineer</b> positions (from 2026 onwards). He is ready to relocate, work hybrid/on-site in major tech hubs like Bangalore, or excel in remote roles. He adapts extremely fast to new stacks!"
-      },
-      education: {
-        words: ["education", "college", "degree", "cgpa", "bca", "university", "puttur", "akshaya", "academics", "score", "grades", "puc", "school"],
-        reply: "Akash holds a <b>Bachelor of Computer Applications (BCA)</b> specializing in Artificial Intelligence from Akshaya College, Puttur (2023-2026), graduating with an exceptional <b>8.98 CGPA</b>! He also finished Commerce PUC with <b>93.33%</b>."
-      },
-      itclub: {
-        words: ["it club", "secretary", "leadership", "students", "club", "organize", "fest", "prism"],
-        reply: "As the <b>Secretary of the IT Club</b> (2025-2026), Akash led over 100 students, conducted hands-on coding bootcamps, hosted tech-fests, and bridged complex software engineering topics with friendly peer collaboration."
-      },
-      certifications: {
-        words: ["certif", "course", "credentials", "vanderbilt", "niyo", "prompt", "cyber", "certificates"],
-        reply: "Akash is certified in <b>Prompt Engineering for Developers</b> (Vanderbilt University) and <b>Python Application Development & Cybersecurity Fundamentals</b> (NIYO Innovation & Skills). He is continuously sharpening his edge!"
-      },
-      location: {
-        words: ["where", "location", "live", "sullia", "karnataka", "india", "bangalore", "place", "city"],
-        reply: "Akash is based in beautiful <b>Sullia, Karnataka, India</b>. He is fully open to relocating to Bangalore, other national hubs, or working globally via remote setups."
-      },
-      projects: {
-        words: ["projects", "portfolio", "bookswap", "creator hub", "content creator", "prism", "fest", "project"],
-        reply: "Apart from FocusGuard, Akash has shipped:<br>1. <b>AI Content Creator Hub</b>: SaaS for video generation schemas (React/FastAPI/MongoDB).<br>2. <b>BookSwap</b>: Relational peer-to-peer exchange (React/Supabase/PostgreSQL).<br>3. <b>PRISM 2K26</b>: College tech-fest portal."
-      },
-      personality: {
-        words: ["hobby", "hobbies", "like", "love", "free time", "fun", "interest", "likes"],
-        reply: "When Akash isn't coding, he's actively playing with local embedding datasets, fine-tuning model prompts, exploring cybersecurity sandboxes, or contributing to technical community forums. Code is his craft and hobby!"
-      },
-      farewell: {
-        words: ["bye", "goodbye", "exit", "farewell", "see ya", "later", "thanks", "thank"],
-        reply: "Goodbye! It was an absolute pleasure chatting with you. Make sure to download Akash's resume or drop him a line in the Contact form. Have a stellar day!"
-      }
-    },
-
-    // Generates high-fidelity contextual answers for absolutely any query
-    generateResponse(query) {
-      const text = query.toLowerCase().trim();
-      if (!text) return "Please enter a valid transmission query!";
-      
-      // 1. Fuzzy and Direct vocabulary scan
-      for (const category in this.knowledge) {
-        const entry = this.knowledge[category];
-        if (matchesFuzzy(text, entry.words, 1)) {
-          return entry.reply;
-        }
-      }
-
-      // 2. Synthesized semantic logic
-      if (text.includes("?") && (text.includes("can") || text.includes("will") || text.includes("could") || text.includes("would"))) {
-        return `That's an interesting question! Yes, Akash is absolutely capable of handling that. In his BCA (AI) and independent builds, he regularly solves tricky structural challenges. Is there a specific project context you have in mind?`;
-      }
-
-      if (text.includes("why") || text.includes("how")) {
-        return `Excellent query. Akash approaches systems design from a foundational level—optimizing data latency and offline viability first. For example, in FocusGuard, he preferred running a lightweight local Random Forest model (95% accuracy) rather than hooking up heavy cloud networks. He values efficiency and local execution highly!`;
-      }
-
-      if (text.includes("salary") || text.includes("money") || text.includes("cost") || text.includes("price") || text.includes("compensation")) {
-        return `Akash is focused on finding the right team, challenging problems, and high growth potential! Compensation details can be discussed directly. You can reach him via the Contact form or directly at <a href="mailto:akashsaliankotegudde@gmail.com" style="color: var(--accent); text-decoration: underline;">akashsaliankotegudde@gmail.com</a>.`;
-      }
-
-      // 3. Natural fallbacks extracting their nouns
-      const cleanText = text.replace(/[^\w\s]/g, "").trim();
-      const words = cleanText.split(/\s+/).filter(w => w.length > 3);
-      
-      if (words.length > 0) {
-        // Pick a relevant word
-        const topicalWord = words[Math.floor(Math.random() * words.length)];
-        return `Interesting inquiry about <b>"${topicalWord}"</b>! While I'm just Akash's AI double and subsist entirely on simulated electricity, I know that Akash's hands-on experience in full-stack engineering and custom AI model design allows him to tackle complex tasks involving <b>${topicalWord}</b>. Try asking me about <b>FocusGuard</b>, his <b>BCA education</b>, or his <b>tech stack</b>!`;
-      }
-
-      return "I've logged your query in my system memory! I'm currently running in simulated sandboxed mode, but Akash specializes in React, Python, FastAPI, and local AI (Ollama/ChromaDB). Try asking about <b>'FocusGuard'</b>, his <b>'Stack'</b>, or his <b>'Availability'</b>!";
-    }
-  };
-
-  function handleChatEnter(e) {
-    if (e.key === 'Enter') {
-      sendChatMsg();
-    }
-  }
-
-  function sendChatMsg() {
-    const rawText = chatInput.value.trim();
-    if (!rawText) return;
-    
-    chatInput.value = '';
-    appendChatBubble(rawText, 'user');
-    AudioController.playClick();
-    
-    // Simulate thinking delay
-    chatTyping.style.display = 'flex';
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-    
-    setTimeout(() => {
-      chatTyping.style.display = 'none';
-      const response = ChatBotAI.generateResponse(rawText);
-      appendChatBubble(response, 'bot');
-      AudioController.playSuccess();
-    }, 750);
-  }
-
-  function triggerChatBotMsg(triggerLabel) {
-    // Extract actual query text
-    let query = triggerLabel;
-    if (triggerLabel.includes('FocusGuard')) query = 'Tell me about FocusGuard';
-    else if (triggerLabel.includes('Stack')) query = 'What is your technology stack?';
-    else if (triggerLabel.includes('Availability')) query = 'What is your professional availability?';
-    else if (triggerLabel.includes('About')) query = 'Who is Akash Salian?';
-    
-    appendChatBubble(query, 'user');
-    AudioController.playClick();
-    
-    chatTyping.style.display = 'flex';
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-    
-    setTimeout(() => {
-      chatTyping.style.display = 'none';
-      const response = ChatBotAI.generateResponse(query);
-      appendChatBubble(response, 'bot');
-      AudioController.playSuccess();
-    }, 600);
-  }
-
-  function resetChatHistory() {
-    AudioController.playSuccess();
-    chatMessages.innerHTML = `
-      <div class="chat-row bot-row">
-        <div class="chat-avatar bot-av">🤖</div>
-        <div class="chat-bubble bot">
-          Hey there! 👋 Akash's AI Clone re-initialized. My system buffers are fully purged. Ask me any question, and I'll answer it!
-        </div>
-      </div>
-    `;
-  }
-
-  function appendChatBubble(text, senderClass) {
-    const row = document.createElement('div');
-    row.className = `chat-row ${senderClass === 'user' ? 'user-row' : 'bot-row'}`;
-    
-    if (senderClass === 'bot') {
-      const av = document.createElement('div');
-      av.className = 'chat-avatar bot-av';
-      av.textContent = '🤖';
-      row.appendChild(av);
-    }
-    
-    const bubble = document.createElement('div');
-    bubble.className = `chat-bubble ${senderClass}`;
-    bubble.innerHTML = text;
-    row.appendChild(bubble);
-    
-    if (senderClass === 'user') {
-      const av = document.createElement('div');
-      av.className = 'chat-avatar user-av';
-      av.textContent = '👤';
-      row.appendChild(av);
-    }
-    
-    chatMessages.appendChild(row);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-  }
 
   /* ================= INTERACTIVE SKILLS MATRIX DATA ================= */
   const skillDetails = {
@@ -2879,49 +2516,71 @@
       `
     },
     contenthub: {
-      category: "FULL-STACK SAAS METRICS",
-      title: "Content Creator Hub Infrastructure",
+      category: "FULL-STACK SAAS + DEVOPS",
+      title: "AI Content Creator Hub — End-to-End Infrastructure",
       body: `
         <p style="margin-bottom: 16px; color: var(--text-2);">
-          Creator Hub maps API payloads to cloud database schemas, storing script templates and indexing generation patterns with integrated MongoDB collections.
+          AI Content Creator Hub is an AI-powered SaaS platform built end-to-end as sole developer. The backend runs on FastAPI with a MongoDB schema designed for flexible, unstructured content storage, integrating an LLM via the Groq API to automate content generation and cut manual content creation time by 70%.
         </p>
         
         <div class="modal-section">
-          <h4>Data Schema Layout</h4>
+          <h4>System Architecture &amp; Deployment Flow</h4>
           <div class="arch-diagram-box">
-            <svg viewBox="0 0 500 120" style="width: 100%; height: auto;">
+            <svg viewBox="0 0 500 140" style="width: 100%; height: auto;">
               <!-- Nodes -->
-              <rect x="15" y="25" width="110" height="70" rx="6" fill="#111827" stroke="var(--accent)" stroke-width="1.5" />
-              <text x="70" y="45" fill="var(--accent)" font-size="10" font-family="monospace" text-anchor="middle">User Interface</text>
-              <text x="70" y="65" fill="var(--text-3)" font-size="8" font-family="monospace" text-anchor="middle">React client state</text>
-              <text x="70" y="80" fill="var(--text-3)" font-size="8" font-family="monospace" text-anchor="middle">Vite build assets</text>
+              <rect x="10" y="10" width="95" height="50" rx="6" fill="#111827" stroke="var(--accent)" stroke-width="1.5" />
+              <text x="57" y="32" fill="var(--accent)" font-size="9" font-family="monospace" text-anchor="middle">React Frontend</text>
+              <text x="57" y="48" fill="var(--text-3)" font-size="7.5" font-family="monospace" text-anchor="middle">JS/HTML5/CSS3</text>
               
-              <rect x="195" y="25" width="110" height="70" rx="6" fill="#111827" stroke="var(--accent-2)" stroke-width="1.5" />
-              <text x="250" y="45" fill="var(--accent-2)" font-size="10" font-family="monospace" text-anchor="middle">FastAPI Core</text>
-              <text x="250" y="65" fill="var(--text-3)" font-size="8" font-family="monospace" text-anchor="middle">CORS checks</text>
-              <text x="250" y="80" fill="var(--text-3)" font-size="8" font-family="monospace" text-anchor="middle">Pydantic models</text>
+              <rect x="145" y="10" width="95" height="50" rx="6" fill="#111827" stroke="var(--accent-2)" stroke-width="1.5" />
+              <text x="192" y="32" fill="var(--accent-2)" font-size="9" font-family="monospace" text-anchor="middle">FastAPI Backend</text>
+              <text x="192" y="48" fill="var(--text-3)" font-size="7.5" font-family="monospace" text-anchor="middle">JWT + bcrypt</text>
               
-              <rect x="375" y="25" width="110" height="70" rx="6" fill="#111827" stroke="var(--accent-success)" stroke-width="1.5" />
-              <text x="430" y="45" fill="var(--accent-success)" font-size="10" font-family="monospace" text-anchor="middle">MongoDB State</text>
-              <text x="430" y="65" fill="var(--text-3)" font-size="8" font-family="monospace" text-anchor="middle">Session document</text>
-              <text x="430" y="80" fill="var(--text-3)" font-size="8" font-family="monospace" text-anchor="middle">Output indices</text>
+              <rect x="280" y="5" width="90" height="30" rx="6" fill="#111827" stroke="var(--accent-success)" stroke-width="1.5" />
+              <text x="325" y="24" fill="var(--accent-success)" font-size="9" font-family="monospace" text-anchor="middle">Groq API (LLM)</text>
+              
+              <rect x="280" y="45" width="90" height="30" rx="6" fill="#111827" stroke="var(--accent-success)" stroke-width="1.5" />
+              <text x="325" y="64" fill="var(--accent-success)" font-size="9" font-family="monospace" text-anchor="middle">MongoDB Atlas</text>
 
-              <!-- Base Connector Tracks (Static) -->
-              <path d="M 125 60 L 195 60" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1.5" />
-              <path d="M 305 60 L 375 60" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1.5" />
+              <rect x="410" y="10" width="80" height="50" rx="6" fill="#111827" stroke="#fff" stroke-width="1.5" stroke-opacity="0.3" />
+              <text x="450" y="30" fill="#fff" font-size="9" font-family="monospace" text-anchor="middle">Docker on</text>
+              <text x="450" y="48" fill="#fff" font-size="8" font-family="monospace" text-anchor="middle">AWS EC2</text>
 
-              <!-- Glowing animated data packet overlays -->
-              <path d="M 125 60 L 195 60" fill="none" stroke="var(--accent-2)" stroke-width="2.2" class="packet-line p1" />
-              <path d="M 305 60 L 375 60" fill="none" stroke="var(--accent-success)" stroke-width="2.2" class="packet-line p2" />
+              <!-- Deployment row -->
+              <rect x="160" y="80" width="110" height="30" rx="6" fill="#0f111a" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" />
+              <text x="215" y="99" fill="var(--text-3)" font-size="8" font-family="monospace" text-anchor="middle">GitHub Actions CI/CD</text>
+              
+              <rect x="310" y="80" width="80" height="30" rx="6" fill="#0f111a" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" />
+              <text x="350" y="99" fill="var(--text-3)" font-size="8" font-family="monospace" text-anchor="middle">Caddy Proxy</text>
+
+              <!-- Connectors -->
+              <path d="M 105 35 L 145 35" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1.5" />
+              <path d="M 240 35 L 250 35 L 250 20 L 280 20" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1.5" />
+              <path d="M 240 35 L 250 35 L 250 60 L 280 60" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1.5" />
+              <path d="M 370 20 L 390 20 L 390 35 L 410 35" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1.5" />
+              <path d="M 370 60 L 390 60 L 390 35 L 410 35" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1.5" />
+              <path d="M 215 80 L 215 60 L 160 60" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1" stroke-dasharray="3,3" />
+              <path d="M 270 95 L 310 95" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1.5" />
+              <path d="M 390 95 L 410 35" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1" stroke-dasharray="3,3" />
+
+              <!-- Animated packets -->
+              <path d="M 105 35 L 145 35" fill="none" stroke="var(--accent)" stroke-width="2.2" class="packet-line p1" />
+              <path d="M 240 35 L 250 35 L 250 20 L 280 20" fill="none" stroke="var(--accent-2)" stroke-width="2.2" class="packet-line p2" />
+              <path d="M 240 35 L 250 35 L 250 60 L 280 60" fill="none" stroke="var(--accent-success)" stroke-width="2.2" class="packet-line p3" />
             </svg>
           </div>
         </div>
         
         <div class="modal-section">
-          <h4>Systems Features</h4>
+          <h4>Key Features &amp; DevOps Pipeline</h4>
           <p style="color: var(--text-2);">
-            • <b>Dynamic Prompting</b>: Incorporates targeted parsing criteria ensuring text outcomes retain structured scripts.<br>
-            • <b>Fast MongoDB Syncing</b>: Created efficient asynchronous cursor lookups preventing request blocks, streamlining historical page feeds by 70%.
+            • <b>Secure Auth</b>: JWT-based sessions with bcrypt password hashing for user registration and login.<br>
+            • <b>LLM Integration</b>: Groq API powers real-time generation of titles, video scripts, and hashtags with prompt engineering.<br>
+            • <b>Content History</b>: MongoDB stores all generated outputs so users can revisit and reuse past generations.<br>
+            • <b>REST API</b>: Dedicated endpoints for each content type — titles, scripts, hashtags.<br>
+            • <b>Docker + AWS EC2</b>: Containerized backend deployed to EC2 with proper security groups and networking.<br>
+            • <b>CI/CD</b>: GitHub Actions pipeline auto-builds, pushes, and redeploys on every commit.<br>
+            • <b>Caddy</b>: Reverse proxy with automatic HTTPS for production traffic.
           </p>
         </div>
       `
@@ -3277,7 +2936,7 @@ const FloatingBot = (() => {
     {
       id:'projects',
       triggers:['projects','portfolio','bookswap','creator hub','content hub','prism','fest website','what did you build','shipped'],
-      reply: () => `**Shipped Production Projects:**\n\n1. **FocusGuard** (Flagship, AI) — local eye-tracking wellness, 95% RF accuracy, Ollama RAG\n2. **AI Content Creator Hub** — SaaS for creators: titles, scripts, hashtags. React + FastAPI + MongoDB + JWT caching. Live on Netlify\n3. **BookSwap** — Peer-to-peer book exchange with Supabase + PostgreSQL + RLS row-level security\n4. **PRISM 2K26** — High-engagement college tech-fest site with interactive grids & registration funnels\n\nAll include live demos + GitHub sources.`,
+      reply: () => `**Shipped Production Projects:**\n\n1. **FocusGuard** (Flagship, AI) — local eye-tracking wellness, 95% RF accuracy, Ollama RAG\n2. **AI Content Creator Hub** — AI-powered SaaS for creators. Generates titles, scripts, hashtags via Groq API. FastAPI + MongoDB + JWT + Docker on AWS EC2 with GitHub Actions CI/CD. Cuts content creation time by 70%.\n3. **BookSwap** — Peer-to-peer book exchange with Supabase + PostgreSQL + RLS row-level security\n4. **PRISM 2K26** — High-engagement college tech-fest site with interactive grids & registration funnels\n\nAll include live demos + GitHub sources.`,
       actions: [{label:'🚀 Filter AI Projects', action:'filter:ai'}, {label:'💼 View All', action:'scrollWork'}]
     },
     {
