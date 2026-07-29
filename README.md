@@ -9,7 +9,7 @@ An immersive, high-fidelity developer portfolio built to showcase modern softwar
 ## 🌟 Core Advanced Features
 
 ### 1. 🎛️ The Command Center Dashboard
-An embedded interactive developer environment located directly within the Hero section, containing three major panels:
+An embedded interactive developer environment located directly within the Hero section, containing two major panels:
 *   **Status Monitor**: Integrates a live digital clock localized to India Time (IST) with active/sleep state triggers, dynamic resource bars (simulating developer coffee level and mental load), and a running code modification line counter.
 *   **Retro Bash Terminal**: A fully functional command line interpreter supporting core commands:
     *   `help` — Lists all executable shell macros.
@@ -20,7 +20,6 @@ An embedded interactive developer environment located directly within the Hero s
     *   `coffee` — Triggers a success sound and resets the status coffee counter to `100%`.
     *   `matrix` — Activates an interactive cascading digital green Matrix rain animation overlay directly within the terminal box.
     *   `clear` — Wipes the terminal history buffer.
-*   **Conversational AI Assistant (Akash AI Clone)**: A chat console allowing visitors to message Akash's clone. Utilizes quick-trigger prompt buttons and realistic typed delays to explain his stack, specific projects (FocusGuard), and availability.
 
 ### 2. 🎚️ Web Audio UI Synthesizer
 A native sound orchestration subsystem built entirely on the browser's native **Web Audio API**. Generates refined mechanical sci-fi audio feedback for hovering items, button clicks, terminal keystrokes, and message packets with zero network loading latency. Features a dynamic mute toggle switch in the floating navigation bar.
