@@ -219,12 +219,18 @@
   }
   #hero-canvas { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
   
-  .hero-grid {
-    display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 40px; align-items: center;
-    position: relative; z-index: 2;
-  }
+  .hero-grid { position: relative; z-index: 2; }
   
-  .hero-text-panel { display: flex; flex-direction: column; align-items: flex-start; }
+  .hero-text-panel {
+    display: flex; flex-direction: column; align-items: flex-start; position: relative;
+    max-width: 920px; padding: clamp(20px, 4vw, 54px) 0;
+  }
+  .hero-text-panel::before {
+    content: ""; position: absolute; width: min(72vw, 960px); height: min(72vw, 760px);
+    left: -16%; top: 50%; transform: translateY(-50%); pointer-events: none; z-index: -1;
+    background: radial-gradient(circle, rgba(59,130,246,.13) 0%, rgba(139,92,246,.07) 32%, transparent 68%);
+    filter: blur(12px);
+  }
   
   /* Cyber badge */
   .hero-badge {
@@ -238,7 +244,7 @@
   @keyframes flash { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
 
   h1.hero-title {
-    font-size: clamp(34px, 5.5vw, 62px); line-height: 1.1; max-width: 650px;
+    font-size: clamp(42px, 6.8vw, 86px); line-height: 1.04; letter-spacing: -0.045em; max-width: 920px;
     background: linear-gradient(135deg, #ffffff 10%, #a2a8ba 100%);
     -webkit-background-clip: text; background-clip: text; color: transparent;
   }
@@ -248,7 +254,7 @@
     text-shadow: 0 0 40px rgba(59, 130, 246, 0.15);
   }
 
-  .hero-sub { margin-top: 20px; font-size: clamp(15px, 1.8vw, 17px); line-height: 1.7; color: var(--text-2); max-width: 540px; }
+  .hero-sub { margin-top: 26px; font-size: clamp(16px, 2vw, 20px); line-height: 1.7; color: var(--text-2); max-width: 720px; }
   
   .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; width: 100%; }
   
@@ -264,7 +270,7 @@
   .btn-ghost { background: var(--surface); border-color: var(--border); color: var(--text-1); }
   .btn-ghost:hover { background: var(--surface-hover); border-color: var(--border-strong); transform: translateY(-2px); }
 
-  .hero-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 44px; }
+  .hero-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 38px; }
   .pill {
     font-family: var(--font-mono); font-size: 12px; color: var(--text-2);
     border: 1px solid var(--border); background: var(--surface); padding: 6px 14px; border-radius: 100px;
@@ -691,7 +697,7 @@
 
   /* ============ RESPONSIVE LAYOUTS ============ */
   @media (max-width: 1000px) {
-    .hero-grid { grid-template-columns: 1fr; gap: 50px; }
+    .hero-grid { display: block; }
     .skills-layout { grid-template-columns: 1fr; }
     .skill-details-panel { position: relative; top: 0; min-height: auto; }
     .command-center { height: 460px; }
@@ -708,6 +714,10 @@
   @media (max-width: 640px) {
     :root { --edge: 18px; }
     #hero { padding-top: 110px; padding-bottom: 40px; }
+    .hero-text-panel { padding: 12px 0 28px; }
+    h1.hero-title { font-size: clamp(40px, 12vw, 58px); line-height: 1.06; }
+    .hero-sub { margin-top: 20px; font-size: 16px; }
+    .hero-badge { margin-bottom: 20px; font-size: 10.5px; padding: 6px 11px; }
     .hero-actions .btn { width: 100%; justify-content: center; }
     .hero-actions { flex-direction: column; }
     .hero-pills { margin-top: 30px; }
@@ -853,105 +863,6 @@
           <span class="pill">FastAPI</span>
           <span class="pill">AI &amp; Computer Vision</span>
           <span class="pill">Local RAG</span>
-        </div>
-      </div>
-      
-      <!-- Right Dashboard Center -->
-      <div class="command-center reveal">
-        <div class="cc-header">
-          <div class="cc-dots">
-            <span class="cc-dot red"></span>
-            <span class="cc-dot yellow"></span>
-            <span class="cc-dot green"></span>
-          </div>
-          <div class="cc-tabs">
-            <button class="cc-tab active" data-tab="cc-status" onclick="switchCCTab('cc-status')">Status</button>
-            <button class="cc-tab" data-tab="cc-terminal" onclick="switchCCTab('cc-terminal')">Terminal</button>
-          </div>
-        </div>
-        
-        <div class="cc-body">
-          
-          <!-- Tab 1: Status Monitor -->
-          <div class="cc-panel active" id="cc-status">
-            <div class="status-grid">
-              
-              <!-- Clock widget -->
-              <div class="status-widget clock-widget">
-                <div>
-                  <div class="widget-title">Local Time (Sullia, IN)</div>
-                  <div class="clock-text" id="liveClock">00:00:00 AM</div>
-                </div>
-                <div class="clock-status active" id="clockStatus">🟢 ACTIVE &amp; CODING</div>
-              </div>
-              
-              <!-- Core Tech widget -->
-              <div class="status-widget">
-                <div>
-                  <div class="widget-title">Current Focus</div>
-                  <div class="widget-val" style="font-size: 13.5px; font-family: var(--font-mono); color: var(--accent-2);">Deep Learning &amp; React 19</div>
-                </div>
-                <div class="pulse-node" style="margin-top: 8px;">
-                  <span class="pulse-indicator"></span>
-                  <span style="font-size: 11px;">RAG pipeline OK</span>
-                </div>
-              </div>
-              
-              <!-- Metric widgets with progress bars -->
-              <div class="status-widget">
-                <div>
-                  <div class="widget-title">Coffee Level</div>
-                  <div class="widget-val" id="coffeeVal">78%</div>
-                </div>
-                <div class="gauge-container">
-                  <div class="gauge-fill coffee" id="coffeeGauge" style="width: 78%;"></div>
-                </div>
-              </div>
-              
-              <div class="status-widget">
-                <div>
-                  <div class="widget-title">Mental Bandwidth</div>
-                  <div class="widget-val" id="brainVal">45%</div>
-                </div>
-                <div class="gauge-container">
-                  <div class="gauge-fill brain" id="brainGauge" style="width: 45%;"></div>
-                </div>
-              </div>
-
-              <!-- Lines of code written today -->
-              <div class="status-widget" style="grid-column: span 2; flex-direction: row; align-items: center; justify-content: space-between;">
-                <div>
-                  <div class="widget-title">Simulated Code Commits Pulse</div>
-                  <div class="widget-val" id="locVal" style="font-family: var(--font-mono); font-size: 15px;">2,482 lines written today</div>
-                </div>
-                <div class="pulse-node">
-                  <span class="pulse-indicator" style="background-color: var(--accent);"></span>
-                  <span style="font-size: 11px;">SYNCED</span>
-                </div>
-              </div>
-
-            </div>
-          </div>
-          
-          <!-- Tab 2: Terminal -->
-          <div class="cc-panel terminal-panel" id="cc-terminal">
-            <!-- Matrix rain overlay inside terminal -->
-            <div class="matrix-container" id="matrixContainer">
-              <canvas class="matrix-canvas" id="matrixCanvas"></canvas>
-              <button class="matrix-exit" onclick="exitMatrixMode()">Exit Matrix [ESC]</button>
-            </div>
-            
-            <div class="terminal-history" id="terminalHistory">
-              <div class="terminal-line output">Type 'help' for available commands. Welcome to guest@akash-salian:~#</div>
-              <div class="terminal-line success">[OK] Ready. Initialized cyber-portfolio environment.</div>
-            </div>
-            <div class="terminal-input-row">
-              <span class="terminal-prompt">guest@akash:~#</span>
-              <input type="text" class="terminal-input" id="terminalInput" placeholder="try 'help' or 'matrix'..." autocomplete="off" spellcheck="false">
-            </div>
-          </div>
-          
-
         </div>
       </div>
       
@@ -1684,7 +1595,7 @@
     clear: ''
   };
 
-  termInput.addEventListener('keydown', (e) => {
+  if (termInput) termInput.addEventListener('keydown', (e) => {
     // Keyboard key click sound
     AudioController.playHover();
     
